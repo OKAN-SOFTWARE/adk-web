@@ -1248,9 +1248,9 @@ describe('ChatComponent', () => {
           'OK',
       );
     });
-    });
+  });
 
-    describe('ChatPanel integration', () => {
+  describe('ChatPanel integration', () => {
     beforeEach(() => {
       mockAgentService.listAppsResponse.next(
           [TEST_APP_1_NAME, TEST_APP_2_NAME]);

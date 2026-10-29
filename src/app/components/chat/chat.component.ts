@@ -4942,46 +4942,46 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateState() {
-  const dialogRef = this.dialog.open(EditJsonDialogComponent, {
-    maxWidth: '90vw',
-    maxHeight: '90vh',
-    data: {
-      dialogHeader: 'Update state',
-      jsonContent: this.currentSessionState,
-    },
-  });
+    const dialogRef = this.dialog.open(EditJsonDialogComponent, {
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      data: {
+        dialogHeader: 'Update state',
+        jsonContent: this.currentSessionState,
+      },
+    });
 
-  dialogRef.afterClosed().subscribe((result: SessionState | null) => {
-    if (result === null || result === undefined) {
-      return;
-    }
+    dialogRef.afterClosed().subscribe((result: SessionState | null) => {
+      if (result === null || result === undefined) {
+        return;
+      }
 
-    // Preserve pending updates when a session has not been created yet.
-    if (!this.sessionId) {
-      this.updatedSessionState.set(result);
-      return;
-    }
+      // Preserve pending updates when a session has not been created yet.
+      if (!this.sessionId) {
+        this.updatedSessionState.set(result);
+        return;
+      }
 
-    // Persist changes immediately instead of waiting for the next message.
-    this.sessionService
-      .updateSession(this.userId, this.appName, this.sessionId, {
-        stateDelta: result,
-      })
-      .subscribe({
-        next: (session) => {
-          this.currentSessionState = session.state || result;
-          this.updatedSessionState.set(null);
+      // Persist changes immediately instead of waiting for the next message.
+      this.sessionService
+        .updateSession(this.userId, this.appName, this.sessionId, {
+          stateDelta: result,
+        })
+        .subscribe({
+          next: (session) => {
+            this.currentSessionState = session.state || result;
+            this.updatedSessionState.set(null);
 
-          this.sessionTab?.reloadSession(this.sessionId);
-          this.drawerSessionTab()?.reloadSession(this.sessionId);
-        },
-        error: (error) => {
-          console.error('Failed to update session state:', error);
-          this.openSnackBar('Failed to update session state', 'OK');
-        },
-      });
-  });
-}
+            this.sessionTab?.reloadSession(this.sessionId);
+            this.drawerSessionTab()?.reloadSession(this.sessionId);
+          },
+          error: (error) => {
+            console.error('Failed to update session state:', error);
+            this.openSnackBar('Failed to update session state', 'OK');
+          },
+        });
+    });
+  }
 
   removeStateUpdate() {
     this.updatedSessionState.set(null);
